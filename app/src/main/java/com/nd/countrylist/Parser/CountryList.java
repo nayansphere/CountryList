@@ -1,4 +1,4 @@
-package com.nd.countrylist;
+package com.nd.countrylist.Parser;
 
 public class CountryList {
     String name;

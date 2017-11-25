@@ -1,4 +1,4 @@
-package com.nd.countrylist;
+package com.nd.countrylist.Adapter;
 
 import android.content.Context;
 import android.content.res.Resources;

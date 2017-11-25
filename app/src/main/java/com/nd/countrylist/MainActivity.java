@@ -2,8 +2,6 @@ package com.nd.countrylist;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,25 +9,23 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.bumptech.glide.RequestBuilder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nd.countrylist.Adapter.DividerItemDecoration;
+import com.nd.countrylist.Adapter.ListDataAdapter;
+import com.nd.countrylist.Parser.CountryList;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class MainActivity extends AppCompatActivity implements ListDataAdapter.ListDataAdapterListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -39,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
     private List<CountryList> countryList;
     private ListDataAdapter mAdapter;
     private SearchView searchView;
-
-    private RequestBuilder<PictureDrawable> requestBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +47,6 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle("Country List");
 
-        requestBuilder = GlideApp.with(this)
-                .as(PictureDrawable.class)
-                .placeholder(R.drawable.image_loading)
-                .error(R.drawable.image_error)
-                .transition(withCrossFade())
-                .listener(new SvgSoftwareLayerSetter());
-
         recyclerView = findViewById(R.id.recycler_view);
         countryList = new ArrayList<>();
         mAdapter = new ListDataAdapter(this, countryList, this);
@@ -69,9 +56,6 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST, 0));
         recyclerView.setAdapter(mAdapter);
-
-        // Uri uri = Uri.parse("https://restcountries.eu/data/afg.svg");
-        // requestBuilder.load(uri).into(imageView);
 
         fetchCountryList();
     }
