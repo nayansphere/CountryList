@@ -2,6 +2,7 @@ package com.nd.countrylist;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -130,5 +131,12 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
     @Override
     public void onItemSelected(CountryList item) {
         Toast.makeText(getApplicationContext(), "Selected: " + item.getName(), Toast.LENGTH_LONG).show();
+
+        Intent mIntent = new Intent(MainActivity.this, ActivityDetails.class);
+        mIntent.putExtra("country_name", item.getName());
+        mIntent.putExtra("flag_url", item.getFlag());
+        mIntent.putExtra("country_code_2", item.getAlpha2Code());
+        mIntent.putExtra("country_code_3", item.getAlpha3Code());
+        startActivity(mIntent);
     }
 }
