@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 public class ActivityDetails extends AppCompatActivity {
+    CommonUtils mCommonUtils;
     CollapsingToolbarLayout collapsingToolbar;
 
     private String mStrFlagURL = "";
@@ -20,6 +21,8 @@ public class ActivityDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        mCommonUtils = new CommonUtils(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -35,6 +38,10 @@ public class ActivityDetails extends AppCompatActivity {
             mStrCountryCode3 = intent.getStringExtra("country_code_3");
 
             setCollapsingToolbar();
+        }
+
+        if (mCommonUtils.check_Internet()) {
+            // Todo
         }
     }
 

@@ -3,6 +3,7 @@ package com.nd.countrylist;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -37,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
     private ListDataAdapter mAdapter;
     private SearchView searchView;
 
+    CommonUtils mCommonUtils;
+    SharedPreferences mSharedPreferences;
+    SharedPreferences.Editor prefsEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle("Country List");
 
+        mCommonUtils = new CommonUtils(this);
+        mSharedPreferences = getSharedPreferences(getApplicationContext().getPackageName(), 0);
+        prefsEditor = mSharedPreferences.edit();
+
         recyclerView = findViewById(R.id.recycler_view);
         countryList = new ArrayList<>();
         mAdapter = new ListDataAdapter(this, countryList, this);
@@ -58,7 +68,11 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST, 0));
         recyclerView.setAdapter(mAdapter);
 
-        fetchCountryList();
+        if (mCommonUtils.check_Internet()) {
+            fetchCountryList();
+        } else {
+            Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void fetchCountryList() {
@@ -77,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
                         countryList.clear();
                         countryList.addAll(items);
                         mAdapter.notifyDataSetChanged();
+
+                        setDataInLocalStorage();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -130,13 +146,16 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
 
     @Override
     public void onItemSelected(CountryList item) {
-        Toast.makeText(getApplicationContext(), "Selected: " + item.getName(), Toast.LENGTH_LONG).show();
-
         Intent mIntent = new Intent(MainActivity.this, ActivityDetails.class);
         mIntent.putExtra("country_name", item.getName());
         mIntent.putExtra("flag_url", item.getFlag());
         mIntent.putExtra("country_code_2", item.getAlpha2Code());
         mIntent.putExtra("country_code_3", item.getAlpha3Code());
         startActivity(mIntent);
+    }
+
+    public void setDataInLocalStorage() {
+        // prefsEditor.putString("country_list", countryList.toString());
+        // prefsEditor.commit();
     }
 }

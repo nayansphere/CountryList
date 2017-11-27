@@ -137,6 +137,7 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <!--
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -145,5 +146,6 @@
         android:src="@drawable/ic_discuss"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"/>
+    -->
 
 </android.support.design.widget.CoordinatorLayout>
