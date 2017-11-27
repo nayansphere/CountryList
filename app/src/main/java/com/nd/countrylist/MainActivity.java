@@ -31,17 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ListDataAdapter.ListDataAdapterListener {
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String URL = "https://restcountries.eu/rest/v2/all";
-
-    private RecyclerView recyclerView;
-    private List<CountryList> countryList;
-    private ListDataAdapter mAdapter;
-    private SearchView searchView;
+    RecyclerView recyclerView;
+    List<CountryList> countryList;
+    ListDataAdapter mAdapter;
+    SearchView searchView;
 
     CommonUtils mCommonUtils;
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor prefsEditor;
+
+    String API_URL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         countryList = new ArrayList<>();
         mAdapter = new ListDataAdapter(this, countryList, this);
 
+        API_URL = mCommonUtils.APIURL + "all";
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
     }
 
     private void fetchCountryList() {
-        JsonArrayRequest request = new JsonArrayRequest(URL,
+        JsonArrayRequest request = new JsonArrayRequest(API_URL,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

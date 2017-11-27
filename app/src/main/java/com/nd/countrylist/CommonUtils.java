@@ -12,6 +12,8 @@ public class CommonUtils {
     ConnectivityManager mConnectivityManager;
     NetworkInfo mNetworkInfo;
 
+    public static String APIURL = "https://restcountries.eu/rest/v2/";
+
     public CommonUtils() {
         // Todo
     }

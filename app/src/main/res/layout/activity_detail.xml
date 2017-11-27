@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
@@ -11,33 +10,33 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_backdrop_height"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -48,104 +47,235 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/rel_main_details"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="24dp">
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.CardView
+            <RelativeLayout
+                android:id="@+id/rel_capital"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/card_margin">
+                android:padding="10dp">
 
-                <LinearLayout
-                    style="@style/Widget.CardContent"
+                <ImageView
+                    android:id="@+id/icon_capital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/txt_capital_title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_capital"
+                    android:text="Capital"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Info"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <TextView
+                    android:id="@+id/txt_capital_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_capital_title"
+                    android:layout_toRightOf="@+id/icon_capital"
+                    android:text="" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cheese_ipsum" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
+            <RelativeLayout
+                android:id="@+id/rel_region"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/card_margin"
-                android:layout_marginLeft="@dimen/card_margin"
-                android:layout_marginRight="@dimen/card_margin">
+                android:layout_below="@+id/rel_capital"
+                android:padding="10dp">
 
-                <LinearLayout
-                    style="@style/Widget.CardContent"
+                <ImageView
+                    android:id="@+id/icon_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/txt_title_region"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_region"
+                    android:text="Region &amp; Sub Region"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Friends"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <TextView
+                    android:id="@+id/txt_val_region"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_title_region"
+                    android:layout_toRightOf="@+id/icon_region"
+                    android:text="" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cheese_ipsum" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
+            <RelativeLayout
+                android:id="@+id/rel_population"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/card_margin"
-                android:layout_marginLeft="@dimen/card_margin"
-                android:layout_marginRight="@dimen/card_margin">
+                android:layout_below="@+id/rel_region"
+                android:padding="10dp">
 
-                <LinearLayout
-                    style="@style/Widget.CardContent"
+                <ImageView
+                    android:id="@+id/icon_population"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/txt_title_population"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_population"
+                    android:text="Population"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Related"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <TextView
+                    android:id="@+id/txt_val_population"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_title_population"
+                    android:layout_toRightOf="@+id/icon_population"
+                    android:text="" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cheese_ipsum" />
+            <RelativeLayout
+                android:id="@+id/rel_language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_population"
+                android:padding="10dp">
 
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/icon_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
 
-            </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/txt_title_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_language"
+                    android:text="Language"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txt_val_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_title_language"
+                    android:layout_toRightOf="@+id/icon_language"
+                    android:text="" />
+            </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/rel_currency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_language"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/icon_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/txt_title_currency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_currency"
+                    android:text="Currency"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_val_currency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_title_currency"
+                    android:layout_toRightOf="@+id/icon_currency"
+                    android:text=""
+                    android:textDirection="ltr"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_phone_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_currency"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/icon_phone_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/txt_title_phone_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_phone_code"
+                    android:text="Phone Code"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_val_phone_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_title_phone_code"
+                    android:layout_toRightOf="@+id/icon_phone_code"
+                    android:text="" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_web_domain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_phone_code"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/icon_web_domain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_discuss"
+                    android:tint="@color/colorPrimary"/>
+
+                <TextView
+                    android:id="@+id/txt_title_web_domain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/icon_web_domain"
+                    android:text="Internet Domain"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_val_web_domain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_title_web_domain"
+                    android:layout_toRightOf="@+id/icon_web_domain"
+                    android:text="" />
+            </RelativeLayout>
+        </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <!--
-    <android.support.design.widget.FloatingActionButton
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end"
-        android:src="@drawable/ic_discuss"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"/>
-    -->
 
 </android.support.design.widget.CoordinatorLayout>
