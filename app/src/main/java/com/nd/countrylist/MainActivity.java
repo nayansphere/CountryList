@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
     SharedPreferences.Editor prefsEditor;
 
     String API_URL = "";
+    TextView mTxtNoData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +66,13 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         prefsEditor = mSharedPreferences.edit();
 
         recyclerView = findViewById(R.id.recycler_view);
+        mTxtNoData = (TextView) findViewById(R.id.txt_no_data);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                searchView.setQuery("", true);
-                setSupportActionBar(toolbar);
-
-                fetchCountryList();
+                refreshData();
             }
         });
 
@@ -89,9 +90,26 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         fetchCountryList();
     }
 
-    private void hideRefresh() {
+    private void refreshData() {
+        searchView.setQuery("", true);
+        setSupportActionBar(toolbar);
+
+        fetchCountryList();
+    }
+
+    private void manageRespData() {
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
+        }
+
+        if (mTxtNoData != null) {
+            if (countryList != null && countryList.size() > 0) {
+                recyclerView.setVisibility(View.VISIBLE);
+                mTxtNoData.setVisibility(View.GONE);
+            } else {
+                recyclerView.setVisibility(View.GONE);
+                mTxtNoData.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -102,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
                         @Override
                         public void onResponse(JSONArray response) {
                             if (response == null) {
-                                hideRefresh();
-                                Toast.makeText(getApplicationContext(), "Couldn't fetch the contacts! Pleas try again.", Toast.LENGTH_LONG).show();
+                                manageRespData();
+                                Toast.makeText(getApplicationContext(), "Couldn't fetch the country list.", Toast.LENGTH_LONG).show();
                                 return;
                             }
 
@@ -114,20 +132,19 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
                             countryList.addAll(items);
                             mAdapter.notifyDataSetChanged();
 
-                            setDataInLocalStorage();
-                            hideRefresh();
+                            manageRespData();
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    hideRefresh();
+                    manageRespData();
                     Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
 
             MyApplication.getInstance().addToRequestQueue(request);
         } else {
-            hideRefresh();
+            manageRespData();
             Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG).show();
         }
     }
@@ -182,8 +199,4 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         startActivity(mIntent);
     }
 
-    public void setDataInLocalStorage() {
-        // prefsEditor.putString("country_list", countryList.toString());
-        // prefsEditor.commit();
-    }
 }
