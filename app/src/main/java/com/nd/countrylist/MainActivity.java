@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ListDataAdapter.ListDataAdapterListener {
+    Toolbar toolbar;
+
     RecyclerView recyclerView;
+    SwipeRefreshLayout swipeRefreshLayout;
+
     List<CountryList> countryList;
     ListDataAdapter mAdapter;
     SearchView searchView;
@@ -47,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -58,6 +63,18 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         prefsEditor = mSharedPreferences.edit();
 
         recyclerView = findViewById(R.id.recycler_view);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                searchView.setQuery("", true);
+                setSupportActionBar(toolbar);
+
+                fetchCountryList();
+            }
+        });
+
         countryList = new ArrayList<>();
         mAdapter = new ListDataAdapter(this, countryList, this);
 
@@ -69,40 +86,50 @@ public class MainActivity extends AppCompatActivity implements ListDataAdapter.L
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST, 0));
         recyclerView.setAdapter(mAdapter);
 
-        if (mCommonUtils.check_Internet()) {
-            fetchCountryList();
-        } else {
-            Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG).show();
+        fetchCountryList();
+    }
+
+    private void hideRefresh() {
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     private void fetchCountryList() {
-        JsonArrayRequest request = new JsonArrayRequest(API_URL,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (response == null) {
-                            Toast.makeText(getApplicationContext(), "Couldn't fetch the contacts! Pleas try again.", Toast.LENGTH_LONG).show();
-                            return;
+        if (mCommonUtils.check_Internet()) {
+            JsonArrayRequest request = new JsonArrayRequest(API_URL,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            if (response == null) {
+                                hideRefresh();
+                                Toast.makeText(getApplicationContext(), "Couldn't fetch the contacts! Pleas try again.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            List<CountryList> items = new Gson().fromJson(response.toString(), new TypeToken<List<CountryList>>() {
+                            }.getType());
+
+                            countryList.clear();
+                            countryList.addAll(items);
+                            mAdapter.notifyDataSetChanged();
+
+                            setDataInLocalStorage();
+                            hideRefresh();
                         }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideRefresh();
+                    Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
-                        List<CountryList> items = new Gson().fromJson(response.toString(), new TypeToken<List<CountryList>>() {
-                        }.getType());
-
-                        countryList.clear();
-                        countryList.addAll(items);
-                        mAdapter.notifyDataSetChanged();
-
-                        setDataInLocalStorage();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        MyApplication.getInstance().addToRequestQueue(request);
+            MyApplication.getInstance().addToRequestQueue(request);
+        } else {
+            hideRefresh();
+            Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
