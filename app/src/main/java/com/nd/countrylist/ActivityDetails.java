@@ -1,11 +1,14 @@
 package com.nd.countrylist;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,10 @@ public class ActivityDetails extends AppCompatActivity {
     String mStrCountryName = "";
     String mStrCountryCode2 = "";
     String mStrCountryCode3 = "";
+
+    FloatingActionButton mFabMapLocation;
+    String mStrLat = "";
+    String mStrLng = "";
 
     TextView mTextViewCapital;
     TextView mTextViewRegion;
@@ -77,6 +84,27 @@ public class ActivityDetails extends AppCompatActivity {
                 Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG).show();
             }
         }
+
+        mFabMapLocation = (FloatingActionButton) findViewById(R.id.fab_ic_map);
+        mFabMapLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (!mStrLat.isEmpty() && !mStrLng.isEmpty()) {
+                        String mLatLng = mStrLat + ", " + mStrLng;
+                        Uri mMapIntentUri = Uri.parse("geo:" + mLatLng + "?z=1&q=" + mLatLng);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mMapIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+
+                        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(mapIntent);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setCollapsingToolbar() {
@@ -190,6 +218,17 @@ public class ActivityDetails extends AppCompatActivity {
                     }
 
                     mTextViewPhoneCode.setText(mStrCallingCode);
+                }
+
+                JSONArray mLatLng = jsonObject.getJSONArray("latlng");
+                if (mLatLng != null && mLatLng.length() > 0) {
+                    if (mLatLng.get(0) != null) {
+                        mStrLat = mLatLng.get(0).toString();
+                    }
+
+                    if (mLatLng.get(1) != null) {
+                        mStrLng = mLatLng.get(1).toString();
+                    }
                 }
 
             } catch (JSONException e) {
